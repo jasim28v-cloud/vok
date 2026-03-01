@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>VORTEX | NEURAL LINK 2099</title>
+    <title>VORTEX | VIOLET DIMENSION 2099</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://upload-widget.cloudinary.com/global/all.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -12,188 +12,186 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Cairo:wght@200;700&display=swap');
         
-        :root { --neon: #bc00ff; --cyan: #00f3ff; --bg: #05000a; }
+        :root { --neon: #bf00ff; --cyan: #00f3ff; --deep-purple: #0f011d; }
         
-        body { margin: 0; background: var(--bg); color: #fff; overflow: hidden; font-family: 'Cairo', sans-serif; height: 100vh; }
+        body { margin: 0; background: var(--deep-purple); color: #fff; overflow: hidden; font-family: 'Cairo', sans-serif; height: 100vh; }
 
-        /* خلفية الجزيئات المستقبلية */
-        #canvas-nebula { position: fixed; inset: 0; z-index: -1; opacity: 0.6; }
+        /* سديم بنفسجي متحرك في الخلفية */
+        #nebula-canvas { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at center, #1a023d 0%, #0a0118 100%); }
 
-        .vortex-container { height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; perspective: 1000px; }
-        .vortex-container::-webkit-scrollbar { display: none; }
+        .vortex-scroll { height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; perspective: 1200px; }
+        .vortex-scroll::-webkit-scrollbar { display: none; }
         
         .v-frame { height: 100vh; width: 100vw; scroll-snap-align: start; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         
-        /* تأثير زجاجي مع انحناء مستقبلي */
+        /* تصميم الفيديو ككبسولة زمنية */
         video { 
-            width: 92%; height: 85%; object-fit: cover; 
-            border-radius: 40px; border: 1px solid rgba(188, 0, 255, 0.3);
-            box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
-            transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+            width: 90%; height: 82%; object-fit: cover; 
+            border-radius: 50px; border: 2px solid rgba(191, 0, 255, 0.2);
+            box-shadow: 0 0 60px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(191, 0, 255, 0.2);
+            transition: 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transform: rotateY(15deg) scale(0.9);
+            filter: brightness(0.7) saturate(1.2);
         }
-        .v-frame.active video { transform: scale(1.05) rotateX(0deg); }
+        .v-frame.active video { transform: rotateY(0deg) scale(1.05); filter: brightness(1); border-color: var(--cyan); }
 
-        .hud-display { position: fixed; top: 40px; right: 30px; z-index: 100; text-align: right; pointer-events: none; }
-        .glitch-text { font-family: 'Orbitron', sans-serif; font-weight: 900; color: var(--cyan); text-shadow: 2px 0 var(--neon); animation: glitch 3s infinite; }
+        .hud-top { position: fixed; top: 40px; right: 30px; z-index: 100; text-align: right; }
+        .glitch-id { font-family: 'Orbitron'; font-weight: 900; color: var(--cyan); letter-spacing: 2px; text-shadow: 0 0 10px var(--cyan); animation: pulse 2s infinite; }
 
-        @keyframes glitch {
-            0% { clip-path: inset(10% 0 30% 0); transform: skew(5deg); }
-            5% { clip-path: inset(80% 0 1% 0); transform: skew(-5deg); }
-            10% { clip-path: inset(10% 0 30% 0); transform: skew(0); }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        .floating-actions { position: absolute; left: 30px; bottom: 160px; display: flex; flex-direction: column; gap: 25px; z-index: 50; }
+        .action-sphere { 
+            width: 65px; height: 65px; border-radius: 50%; 
+            background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(20px);
+            border: 1px solid rgba(191, 0, 255, 0.3);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 20px rgba(191, 0, 255, 0.1);
+            transition: 0.4s; cursor: pointer;
         }
+        .action-sphere:hover { border-color: var(--cyan); box-shadow: 0 0 30px var(--cyan); transform: scale(1.1) translateY(-5px); }
 
-        .side-orb { position: absolute; left: 25px; bottom: 150px; display: flex; flex-direction: column; gap: 30px; z-index: 50; }
-        .cyber-btn { 
-            width: 60px; height: 60px; border-radius: 50%; 
-            background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px);
-            border: 1px solid rgba(0, 243, 255, 0.2);
-            display: flex; items-center justify-content: center;
-            box-shadow: inset 0 0 15px rgba(0, 243, 255, 0.1);
-            transition: 0.5s; cursor: pointer;
-        }
-        .cyber-btn:hover { border-color: var(--cyan); box-shadow: 0 0 20px var(--cyan); transform: rotate(15deg) scale(1.1); }
-
-        .nav-core { 
+        .nav-bridge { 
             position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); 
-            width: 90%; max-width: 450px; height: 80px; 
-            background: rgba(10, 0, 20, 0.7); backdrop-filter: blur(40px);
-            border-radius: 100px; border: 1px solid rgba(188, 0, 255, 0.2);
+            width: 85%; max-width: 440px; height: 85px; 
+            background: rgba(26, 2, 61, 0.4); backdrop-filter: blur(50px);
+            border-radius: 40px; border: 1px solid rgba(191, 0, 255, 0.2);
             display: flex; justify-content: space-around; align-items: center; z-index: 100;
         }
 
-        .upload-portal { 
-            width: 70px; height: 70px; background: linear-gradient(135deg, var(--cyan), var(--neon));
+        .portal-btn { 
+            width: 75px; height: 75px; background: linear-gradient(45deg, var(--neon), var(--cyan));
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            margin-top: -50px; border: 5px solid var(--bg); box-shadow: 0 10px 30px rgba(188, 0, 255, 0.5);
-            transition: 0.5s; cursor: pointer;
+            margin-top: -60px; border: 6px solid var(--deep-purple); box-shadow: 0 15px 35px rgba(191, 0, 255, 0.6);
+            cursor: pointer; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .upload-portal:hover { transform: scale(1.2) rotate(180deg); }
+        .portal-btn:hover { transform: scale(1.2) rotate(360deg); }
 
-        #comment-vortex { 
-            position: fixed; inset: 0; background: rgba(5, 0, 10, 0.98); 
-            z-index: 2000; display: none; padding: 40px; clip-path: circle(0% at 50% 90%);
-            transition: 0.8s cubic-bezier(0.8, 0, 0.2, 1);
+        #data-stream { 
+            position: fixed; inset: 0; background: rgba(15, 1, 29, 0.96); 
+            z-index: 2000; display: none; padding: 40px; 
+            transition: 0.5s ease-in-out;
         }
-        #comment-vortex.open { clip-path: circle(150% at 50% 90%); display: flex; flex-direction: column; }
+        .violet-input { background: rgba(191, 0, 255, 0.05); border: 1px solid rgba(191, 0, 255, 0.2); border-radius: 20px; padding: 20px; color: #fff; width: 100%; outline: none; transition: 0.3s; }
+        .violet-input:focus { border-color: var(--cyan); box-shadow: 0 0 15px var(--cyan); }
 
-        .footer-line { position: fixed; bottom: 10px; width: 100%; text-align: center; font-family: 'Orbitron'; font-size: 8px; opacity: 0.3; letter-spacing: 5px; }
+        .footer-log { position: fixed; bottom: 10px; width: 100%; text-align: center; font-family: 'Orbitron'; font-size: 8px; color: var(--neon); opacity: 0.4; letter-spacing: 6px; pointer-events: none; }
     </style>
 </head>
 <body>
 
-    <canvas id="canvas-nebula"></canvas>
+    <canvas id="nebula-canvas"></canvas>
 
-    <div class="hud-display">
-        <div class="glitch-text text-xl">SHΔDØW_OS_v9.0</div>
-        <div class="text-[9px] tracking-[4px] opacity-50">SYNC_STATUS: ENCRYPTED</div>
-        <div class="text-[9px] tracking-[4px] text-[var(--cyan)]">EST. 2026 // NODE_ACTIVE</div>
+    <div class="hud-top">
+        <div class="glitch-id text-xl tracking-tighter">NEO_VORTEX_CORE</div>
+        <div class="text-[10px] font-bold text-white/30 font-[Syncopate] mt-1">EST. MARCH_2026 // PUBLIC_SERVER</div>
     </div>
 
-    <main class="vortex-container" id="video-grid"></main>
+    <main class="vortex-scroll" id="main-grid"></main>
 
-    <div class="side-orb">
-        <div class="cyber-btn" onclick="cyberAction('like')"><i class="fas fa-heart-pulse text-[var(--neon)]"></i></div>
-        <div class="cyber-btn" onclick="cyberAction('comment')"><i class="fas fa-satellite-dish text-[var(--cyan)]"></i></div>
-        <div class="cyber-btn" onclick="cyberAction('share')"><i class="fas fa-biohazard"></i></div>
+    <div class="floating-actions">
+        <div class="action-sphere" onclick="runMatrixAd('like')"><i class="fas fa-heart-circle-bolt text-2xl text-[var(--neon)]"></i></div>
+        <div class="action-sphere" onclick="runMatrixAd('comment')"><i class="fas fa-comment-medical text-2xl text-[var(--cyan)]"></i></div>
+        <div class="action-sphere" onclick="runMatrixAd('share')"><i class="fas fa-tower-broadcast text-2xl text-white/50"></i></div>
     </div>
 
-    <nav class="nav-core">
-        <i class="fas fa-terminal opacity-30" onclick="location.reload()"></i>
-        <div class="upload-portal" id="btn-upload"><i class="fas fa-atom text-2xl animate-spin-slow"></i></div>
-        <i class="fas fa-user-astronaut opacity-30" onclick="cyberAction('profile')"></i>
+    <nav class="nav-bridge">
+        <i class="fas fa-microchip text-2xl opacity-30 hover:opacity-100 transition-opacity" onclick="location.reload()"></i>
+        <div class="portal-btn" id="upload-trigger"><i class="fas fa-plus text-3xl text-black"></i></div>
+        <i class="fas fa-dna text-2xl opacity-30 hover:opacity-100 transition-opacity" onclick="runMatrixAd('profile')"></i>
     </nav>
 
-    <div id="comment-vortex">
-        <div class="flex justify-between items-center mb-10">
-            <h1 class="font-black text-2xl tracking-tighter">NEURAL_FEEDBACK</h1>
-            <i class="fas fa-door-open text-3xl cursor-pointer" onclick="toggleVortex(false)"></i>
+    <div id="data-stream" class="flex flex-col">
+        <div class="flex justify-between items-center mb-10 border-b border-[var(--neon)] pb-5">
+            <h1 class="font-black text-2xl font-[Orbitron] text-[var(--neon)] uppercase">Sub_Space_Feedback</h1>
+            <i class="fas fa-power-off text-3xl cursor-pointer hover:text-red-500" onclick="toggleData(false)"></i>
         </div>
-        <div id="comm-stream" class="flex-1 overflow-y-auto space-y-6 mb-6"></div>
-        <div class="flex gap-4">
-            <input type="text" id="comm-input" class="flex-1 bg-white/5 border-b-2 border-[var(--cyan)] p-5 outline-none font-bold" placeholder="ENCODE MESSAGE...">
-            <button onclick="sendSignal()" class="px-8 bg-[var(--cyan)] text-black font-black rounded-full">SEND</button>
+        <div id="msg-orbit" class="flex-1 overflow-y-auto space-y-5 mb-8 scrollbar-hide"></div>
+        <div class="flex gap-4 p-2 bg-white/5 rounded-3xl">
+            <input type="text" id="msg-input" class="violet-input" placeholder="ENCODE SIGNAL...">
+            <button onclick="pushSignal()" class="px-10 bg-[var(--neon)] text-white font-black rounded-2xl hover:bg-[var(--cyan)] transition-colors">PUSH</button>
         </div>
     </div>
 
-    <div class="footer-line">ORIGIN_POINT: 01.03.2026 | SYSTEM_TIME: REALTIME</div>
+    <div class="footer-log">GENESIS_DATE: 2026.03.01 | NODE: GLOBAL_ACCESS</div>
 
     <script>
-        const UID = localStorage.getItem('vortex_uid') || 'PHANTOM-' + Math.random().toString(36).substr(2, 4).toUpperCase();
-        localStorage.setItem('vortex_uid', UID);
-        let activeVideo = null;
+        const NODE_UID = localStorage.getItem('vortex_2099_uid') || 'VX-' + Math.random().toString(36).substr(2, 5).toUpperCase();
+        localStorage.setItem('vortex_2099_uid', NODE_UID);
+        let currentTarget = null;
 
         const firebaseConfig = { databaseURL: "https://forg-c693e-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        const AD_LINKS = [
+        const AD_GATEWAY = [
             "https://www.effectivegatecpm.com/bxwxuk2f39?key=566216691dc8b76a740840e94f68f44c",
             "https://www.effectivegatecpm.com/k60w64w4gk?key=564f3d8cc4ac85949f218179b742495e",
             "https://www.effectivegatecpm.com/kuki6rvqm?key=a04d97f6be8bda0dd0a291285eb401bf"
         ];
 
-        function cyberAction(type) {
-            window.open(AD_LINKS[Math.floor(Math.random()*AD_LINKS.length)], '_blank');
-            if(type === 'comment') toggleVortex(true);
+        function runMatrixAd(type) {
+            window.open(AD_GATEWAY[Math.floor(Math.random()*AD_GATEWAY.length)], '_blank');
+            if(type === 'comment') toggleData(true);
         }
 
-        function toggleVortex(show) {
-            const v = document.getElementById('comment-vortex');
-            if(show) { v.style.display = 'flex'; setTimeout(() => v.classList.add('open'), 10); loadSignals(); }
-            else { v.classList.remove('open'); setTimeout(() => v.style.display = 'none', 800); }
+        function toggleData(show) {
+            const el = document.getElementById('data-stream');
+            el.style.display = show ? 'flex' : 'none';
+            if(show) fetchSignals();
         }
 
         db.ref('videos').on('value', s => {
-            const grid = document.getElementById('video-grid');
+            const grid = document.getElementById('main-grid');
             const data = s.val();
             if(!data) return;
             grid.innerHTML = '';
             Object.keys(data).reverse().forEach(id => {
-                const div = document.createElement('section');
-                div.className = 'v-frame';
-                div.dataset.id = id;
-                div.innerHTML = `<video loop playsinline src="${data[id].url}"></video>`;
-                grid.appendChild(div);
+                const section = document.createElement('section');
+                section.className = 'v-frame';
+                section.dataset.id = id;
+                section.innerHTML = `<video loop playsinline src="${data[id].url}"></video>`;
+                grid.appendChild(section);
             });
-            initObserver();
+            initVortexSync();
         });
 
-        function sendSignal() {
-            const inp = document.getElementById('comm-input');
-            if(inp.value.trim() && activeVideo) {
-                db.ref(`comments/${activeVideo}`).push({ user: UID, msg: inp.value });
+        function pushSignal() {
+            const inp = document.getElementById('msg-input');
+            if(inp.value.trim() && currentTarget) {
+                db.ref(`comments/${currentTarget}`).push({ user: NODE_UID, msg: inp.value });
                 inp.value = '';
             }
         }
 
-        function loadSignals() {
-            db.ref(`comments/${activeVideo}`).on('value', s => {
-                const box = document.getElementById('comm-stream');
+        function fetchSignals() {
+            db.ref(`comments/${currentTarget}`).on('value', s => {
+                const box = document.getElementById('msg-orbit');
                 box.innerHTML = '';
                 const d = s.val();
                 if(d) Object.values(d).forEach(m => {
-                    const msg = document.createElement('div');
-                    msg.className = 'p-5 bg-white/5 border-r-4 border-[var(--neon)] rounded-xl';
-                    msg.innerHTML = `<span class="text-[10px] text-[var(--cyan)] font-black uppercase">${m.user}</span><p class="mt-2 text-lg">${m.msg}</p>`;
-                    box.appendChild(msg);
+                    const div = document.createElement('div');
+                    div.className = 'p-5 bg-white/5 border-l-4 border-[var(--cyan)] rounded-xl backdrop-blur-md';
+                    div.innerHTML = `<span class="text-[10px] text-[var(--neon)] font-black uppercase tracking-widest">${m.user}</span><p class="mt-2 text-md text-white/90">${m.msg}</p>`;
+                    box.appendChild(div);
                 });
                 box.scrollTop = box.scrollHeight;
             });
         }
 
         const uploader = cloudinary.createUploadWidget({ cloudName: "dfscughol", uploadPreset: "update_vk" }, (err, res) => {
-            if (res.event === "success") db.ref('videos').push({ url: res.info.secure_url, sender: UID });
+            if (res.event === "success") db.ref('videos').push({ url: res.info.secure_url, sender: NODE_UID, time: Date.now() });
         });
-        document.getElementById('btn-upload').onclick = () => uploader.open();
+        document.getElementById('upload-trigger').onclick = () => uploader.open();
 
-        function initObserver() {
+        function initVortexSync() {
             const obs = new IntersectionObserver(entries => {
                 entries.forEach(e => {
                     const vid = e.target.querySelector('video');
                     if(e.isIntersecting) {
                         e.target.classList.add('active');
                         vid.play();
-                        activeVideo = e.target.dataset.id;
+                        currentTarget = e.target.dataset.id;
                     } else {
                         e.target.classList.remove('active');
                         vid.pause();
@@ -203,32 +201,34 @@
             document.querySelectorAll('.v-frame').forEach(f => obs.observe(f));
         }
 
-        // تحريك خلفية الجزيئات (Canvas Nebula)
-        const canvas = document.getElementById('canvas-nebula');
+        // تحريك خلفية السديم البنفسجي (Nebula Canvas)
+        const canvas = document.getElementById('nebula-canvas');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        let particles = Array.from({length: 80}, () => ({
+        let stars = Array.from({length: 100}, () => ({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            s: Math.random() * 2,
-            v: Math.random() * 0.5
+            r: Math.random() * 2,
+            o: Math.random(),
+            s: Math.random() * 0.02
         }));
-        function draw() {
-            ctx.clearRect(0,0,canvas.width,canvas.height);
-            particles.forEach(p => {
-                ctx.fillStyle = '#bc00ff';
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.s, 0, Math.PI*2);
-                ctx.fill();
-                p.y -= p.v;
-                if(p.y < 0) p.y = canvas.height;
-            });
-            requestAnimationFrame(draw);
-        }
-        draw();
 
-        document.addEventListener('click', () => { document.querySelectorAll('video').forEach(v => v.muted = false); }, {once:true});
+        function animateNebula() {
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            stars.forEach(s => {
+                ctx.fillStyle = `rgba(191, 0, 255, ${s.o})`;
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+                ctx.fill();
+                s.o += s.s;
+                if(s.o > 1 || s.o < 0) s.s = -s.s;
+            });
+            requestAnimationFrame(animateNebula);
+        }
+        animateNebula();
+
+        document.addEventListener('touchstart', () => { document.querySelectorAll('video').forEach(v => v.muted = false); }, {once:true});
     </script>
 </body>
 </html>
