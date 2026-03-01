@@ -28,7 +28,17 @@
         .upload-diamond { width: 62px; height: 62px; background: #fff; color: #000; border-radius: 24px; transform: rotate(45deg); display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 0 30px rgba(191, 0, 255, 0.4); }
         .upload-diamond i { transform: rotate(-45deg); font-size: 1.5rem; }
         .footer-stamp { position: fixed; bottom: 10px; width: 100%; text-align: center; font-family: 'Syncopate', sans-serif; font-size: 7px; color: rgba(191, 0, 255, 0.3); letter-spacing: 4px; z-index: 10; pointer-events: none; }
-        #comment-sheet { position: fixed; inset: 0; background: rgba(10, 1, 24, 0.95); z-index: 1000; display: none; flex-direction: column; border-top: 1px solid var(--glow); }
+        
+        #comment-sheet { 
+            position: fixed; 
+            inset: 0; 
+            background: rgba(26, 2, 61, 0.85); 
+            backdrop-filter: blur(25px);
+            z-index: 1000; 
+            display: none; 
+            flex-direction: column; 
+            border-top: 1px solid rgba(191, 0, 255, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -44,21 +54,21 @@
     </main>
 
     <div class="side-actions">
-        <div class="luxury-btn ultra-glass" onclick="actionWithAd('like')"><i class="fas fa-heart"></i></div>
-        <div class="luxury-btn ultra-glass" onclick="openComments()"><i class="fas fa-comment-dots"></i></div>
-        <div class="luxury-btn ultra-glass" onclick="actionWithAd('share')"><i class="fas fa-paper-plane"></i></div>
+        <div class="luxury-btn ultra-glass" onclick="triggerAdAction('like')"><i class="fas fa-heart"></i></div>
+        <div class="luxury-btn ultra-glass" onclick="triggerAdAction('comment')"><i class="fas fa-comment-dots"></i></div>
+        <div class="luxury-btn ultra-glass" onclick="triggerAdAction('share')"><i class="fas fa-paper-plane"></i></div>
     </div>
 
     <nav class="nav-bridge ultra-glass">
         <i class="fas fa-th-large text-white/40" onclick="location.reload()"></i>
         <div class="upload-diamond" id="trigger-upload"><i class="fas fa-plus"></i></div>
-        <i class="fas fa-user-secret text-white/40" onclick="actionWithAd('profile')"></i>
+        <i class="fas fa-user-secret text-white/40" onclick="triggerAdAction('profile')"></i>
     </nav>
 
     <div id="comment-sheet" class="p-6">
         <div class="flex justify-between items-center mb-6">
             <h2 class="font-[Syncopate] text-[var(--glow)] text-sm tracking-widest">REALTIME_FEEDBACK</h2>
-            <i class="fas fa-times text-xl" onclick="closeComments()"></i>
+            <i class="fas fa-times text-xl cursor-pointer" onclick="closeComments()"></i>
         </div>
         <div id="comments-list" class="flex-1 overflow-y-auto space-y-4 mb-4 pr-2"></div>
         <div class="flex gap-2">
@@ -78,9 +88,19 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        const AD_LINKS = ["https://www.effectivegatecpm.com/bxwxuk2f39?key=566216691dc8b76a740840e94f68f44c", "https://www.effectivegatecpm.com/k60w64w4gk?key=564f3d8cc4ac85949f218179b742495e"];
+        const AD_LINKS = [
+            "https://www.effectivegatecpm.com/bxwxuk2f39?key=566216691dc8b76a740840e94f68f44c",
+            "https://www.effectivegatecpm.com/k60w64w4gk?key=564f3d8cc4ac85949f218179b742495e",
+            "https://www.effectivegatecpm.com/kuki6rvqm?key=a04d97f6be8bda0dd0a291285eb401bf"
+        ];
         
-        function actionWithAd(type) { window.open(AD_LINKS[Math.floor(Math.random() * AD_LINKS.length)], '_blank'); }
+        function triggerAdAction(type) {
+            window.open(AD_LINKS[Math.floor(Math.random() * AD_LINKS.length)], '_blank');
+            if(type === 'comment') openComments();
+            if(type === 'share' && navigator.share) {
+                navigator.share({title: 'Shadow Genesis', url: window.location.href});
+            }
+        }
 
         db.ref('videos').on('value', snap => {
             const stream = document.getElementById('video-stream');
