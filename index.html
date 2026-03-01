@@ -2,7 +2,10 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
     <title>SHΔDØW GENESIS | ELITE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://upload-widget.cloudinary.com/global/all.js"></script>
@@ -13,40 +16,42 @@
         @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Cairo:wght@300;600;900&display=swap');
         
         :root { --glow: #00f3ff; --dark-bg: #020202; }
-        body { margin: 0; background: var(--dark-bg); color: #fff; overflow: hidden; font-family: 'Cairo', sans-serif; }
+        body { margin: 0; background: var(--dark-bg); color: #fff; overflow: hidden; font-family: 'Cairo', sans-serif; height: 100vh; width: 100vw; }
         
-        .premium-scroller { height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; }
+        .premium-scroller { height: 100%; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; }
         .premium-scroller::-webkit-scrollbar { display: none; }
         
         .v-segment { height: 100vh; width: 100vw; scroll-snap-align: start; position: relative; background: #000; overflow: hidden; }
-        video { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.9) contrast(1.1); }
+        video { width: 100%; height: 100%; object-fit: cover; }
 
-        .overlay-vignette { position: absolute; inset: 0; background: radial-gradient(circle, transparent 30%, rgba(0,0,0,0.8) 100%); pointer-events: none; }
-
-        .deep-glass { background: rgba(10, 10, 10, 0.4); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
+        .deep-glass { background: rgba(10, 10, 10, 0.4); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.08); }
         
-        .xp-display { position: fixed; top: 30px; left: 30px; z-index: 100; padding: 10px; border-left: 2px solid var(--glow); }
-        .xp-line { width: 140px; height: 2px; background: rgba(255,255,255,0.05); margin-top: 8px; overflow: hidden; }
-        #xp-bar { height: 100%; width: 0%; background: linear-gradient(90deg, transparent, var(--glow)); box-shadow: 0 0 15px var(--glow); transition: 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .xp-display { position: fixed; top: env(safe-area-inset-top, 30px); left: 30px; z-index: 100; padding: 10px; border-left: 2px solid var(--glow); }
+        .xp-line { width: 140px; height: 2px; background: rgba(255,255,255,0.05); margin-top: 8px; }
+        #xp-bar { height: 100%; width: 0%; background: linear-gradient(90deg, transparent, var(--glow)); box-shadow: 0 0 15px var(--glow); transition: 0.8s; }
 
         .side-actions { position: absolute; right: 20px; bottom: 140px; display: flex; flex-direction: column; gap: 25px; z-index: 50; }
-        .luxury-btn { width: 55px; height: 55px; border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.4s; position: relative; }
-        .luxury-btn:hover { transform: translateY(-5px); border-color: var(--glow); }
-        .luxury-btn i { font-size: 1.2rem; margin-bottom: 4px; }
+        .luxury-btn { width: 55px; height: 55px; border-radius: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.4s; }
 
-        .nav-bridge { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: 85%; max-width: 420px; height: 75px; border-radius: 30px; display: flex; justify-content: space-around; align-items: center; z-index: 100; }
+        .nav-bridge { position: fixed; bottom: env(safe-area-inset-bottom, 30px); left: 50%; transform: translateX(-50%); width: 85%; max-width: 420px; height: 75px; border-radius: 30px; display: flex; justify-content: space-around; align-items: center; z-index: 100; }
         
-        .upload-diamond { width: 60px; height: 60px; background: #fff; color: #000; border-radius: 22px; transform: rotate(45deg); display: flex; align-items: center; justify-content: center; transition: 0.5s; cursor: pointer; box-shadow: 0 0 20px rgba(255,255,255,0.3); }
-        .upload-diamond i { transform: rotate(-45deg); font-size: 1.4rem; }
-        .upload-diamond:hover { transform: rotate(135deg); background: var(--glow); }
+        .upload-diamond { width: 60px; height: 60px; background: #fff; color: #000; border-radius: 22px; transform: rotate(45deg); display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .upload-diamond i { transform: rotate(-45deg); }
 
-        .footer-stamp { position: fixed; bottom: 5px; width: 100%; text-align: center; font-family: 'Syncopate', sans-serif; font-size: 7px; color: rgba(255,255,255,0.2); letter-spacing: 3px; z-index: 10; pointer-events: none; }
-
-        @keyframes scanline { 0% { top: -100%; } 100% { top: 100%; } }
-        .v-segment::after { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 20px; background: linear-gradient(to bottom, transparent, rgba(0,243,255,0.05), transparent); animation: scanline 4s linear infinite; pointer-events: none; }
+        .footer-stamp { position: fixed; bottom: 5px; width: 100%; text-align: center; font-family: 'Syncopate', sans-serif; font-size: 7px; color: rgba(255,255,255,0.2); letter-spacing: 3px; z-index: 10; }
+        
+        /* زر تفعيل ملء الشاشة في البداية */
+        #fs-overlay { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
     </style>
 </head>
 <body>
+
+    <div id="fs-overlay">
+        <div class="upload-diamond mb-10" onclick="enterFullScreen()">
+            <i class="fas fa-expand"></i>
+        </div>
+        <span class="font-[Syncopate] text-[10px] tracking-[5px] animate-pulse">TAP TO ENTER GRID</span>
+    </div>
 
     <div class="xp-display">
         <div class="text-[10px] font-bold text-white/40 tracking-[4px] font-[Syncopate]">EST. 2026</div>
@@ -56,43 +61,46 @@
 
     <main class="premium-scroller" id="video-stream">
         <div class="h-full flex flex-col items-center justify-center space-y-6">
-            <div class="relative">
-                <div class="w-16 h-16 border-2 border-[var(--glow)] rounded-full animate-ping absolute opacity-20"></div>
-                <i class="fas fa-shield-halved text-4xl text-[var(--glow)] animate-pulse"></i>
-            </div>
-            <span class="text-[10px] font-[Syncopate] tracking-[5px] text-white/30">SHΔDØW_SYSTEM_ACTIVE</span>
+            <i class="fas fa-shield-halved text-4xl text-[var(--glow)] animate-pulse"></i>
         </div>
     </main>
 
     <div class="side-actions">
-        <div id="btn-like-main" class="luxury-btn deep-glass" onclick="actionWithAd('like')">
-            <i class="fas fa-heart"></i>
-            <span id="like-count" class="text-[9px] font-bold">0</span>
-        </div>
-        <div class="luxury-btn deep-glass" onclick="actionWithAd('chat')">
-            <i class="fas fa-comment-alt"></i>
-            <span class="text-[8px] opacity-50 uppercase">Sec</span>
-        </div>
-        <div class="luxury-btn deep-glass" onclick="actionWithAd('share')">
-            <i class="fas fa-share-nodes"></i>
-        </div>
+        <div class="luxury-btn deep-glass" onclick="actionWithAd('like')"><i class="fas fa-heart"></i></div>
+        <div class="luxury-btn deep-glass" onclick="actionWithAd('chat')"><i class="fas fa-comment-alt"></i></div>
+        <div class="luxury-btn deep-glass" onclick="actionWithAd('share')"><i class="fas fa-share-nodes"></i></div>
     </div>
 
     <nav class="nav-bridge deep-glass">
-        <i class="fas fa-ghost text-white/30 hover:text-[var(--glow)] transition-colors cursor-pointer" onclick="location.reload()"></i>
-        <div class="upload-diamond" id="trigger-upload">
-            <i class="fas fa-plus"></i>
-        </div>
-        <i class="fas fa-user-tie text-white/30 hover:text-[var(--glow)] transition-colors cursor-pointer" onclick="actionWithAd('profile')"></i>
+        <i class="fas fa-ghost text-white/30" onclick="location.reload()"></i>
+        <div class="upload-diamond" id="trigger-upload"><i class="fas fa-plus"></i></div>
+        <i class="fas fa-user-tie text-white/30" onclick="actionWithAd('profile')"></i>
     </nav>
 
-    <div class="footer-stamp">ORIGIN: FEBRUARY 2026 | SHΔDØW GENESIS PROTOCOL v2.0</div>
+    <div class="footer-stamp">SHΔDØW GENESIS PROTOCOL v2.0</div>
 
     <script>
+        // دالة الدخول في وضع ملء الشاشة وإخفاء واجهة المتصفح
+        function enterFullScreen() {
+            const doc = document.documentElement;
+            if (doc.requestFullscreen) {
+                doc.requestFullscreen();
+            } else if (doc.mozRequestFullScreen) { // Firefox
+                doc.mozRequestFullScreen();
+            } else if (doc.webkitRequestFullscreen) { // Chrome, Safari, Opera
+                doc.webkitRequestFullscreen();
+            } else if (doc.msRequestFullscreen) { // IE/Edge
+                doc.msRequestFullscreen();
+            }
+            
+            document.getElementById('fs-overlay').style.display = 'none';
+            // تشغيل الفيديوهات بعد التفاعل
+            document.querySelectorAll('video').forEach(v => v.muted = false);
+        }
+
         const UID = localStorage.getItem('shadow_v2_uid') || 'UX-' + Math.random().toString(36).substr(2, 6).toUpperCase();
         localStorage.setItem('shadow_v2_uid', UID);
-        let xpScore = parseInt(localStorage.getItem('shadow_v2_xp')) || 0;
-
+        
         const firebaseConfig = { databaseURL: "https://forg-c693e-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
@@ -104,19 +112,7 @@
 
         function actionWithAd(type) {
             window.open(AD_LINKS[Math.floor(Math.random() * AD_LINKS.length)], '_blank');
-            updateXP(15);
-            if(type === 'share' && navigator.share) navigator.share({title: 'SHADOW GENESIS', url: window.location.href});
         }
-
-        function updateXP(v) {
-            xpScore += v;
-            localStorage.setItem('shadow_v2_xp', xpScore);
-            const level = Math.floor(xpScore / 200) + 1;
-            const progress = (xpScore % 200 / 200) * 100;
-            document.getElementById('rank-name').innerText = `PHANTOM LVL.${level}`;
-            document.getElementById('xp-bar').style.width = progress + "%";
-        }
-        updateXP(0);
 
         db.ref('videos').on('value', snap => {
             const stream = document.getElementById('video-stream');
@@ -127,27 +123,16 @@
                 const data = videos[key];
                 const section = document.createElement('section');
                 section.className = 'v-segment';
-                section.innerHTML = `
-                    <div class="overlay-vignette"></div>
-                    <video loop playsinline src="${data.url}"></video>
-                    <div class="absolute bottom-28 left-8 max-w-[60%]">
-                        <div class="flex items-center gap-3 mb-2">
-                            <div class="w-8 h-8 rounded-full border border-[var(--glow)] flex items-center justify-center text-[10px] font-bold">${data.sender?.substring(0,2) || 'G'}</div>
-                            <span class="text-xs font-bold tracking-widest text-white/80">${data.sender || 'UNKNOWN'}</span>
-                        </div>
-                        <p class="text-[10px] text-white/40 leading-relaxed uppercase tracking-tighter">DATA_ENCRYPTION_ACTIVE // SERVER_LOCATION_HIDDEN</p>
-                    </div>
-                `;
+                section.innerHTML = `<video loop playsinline src="${data.url}"></video>`;
                 stream.appendChild(section);
             });
             initMotion();
         });
 
         const cloudSettings = { cloudName: "dfscughol", uploadPreset: "update_vk" };
-        const uploader = cloudinary.createUploadWidget({ ...cloudSettings, sources: ['local'], styles: { palette: { window: "#050505", sourceBg: "#050505", windowBorder: "#00f3ff", tabIcon: "#00f3ff", inactiveTabIcon: "#ffffff", menuIcons: "#00f3ff", link: "#00f3ff", action: "#00f3ff", inProgress: "#00f3ff", complete: "#00f3ff", error: "#ff0000", textDark: "#000000", textLight: "#ffffff" } } }, (err, res) => {
+        const uploader = cloudinary.createUploadWidget({ ...cloudSettings, sources: ['local'] }, (err, res) => {
             if (res.event === "success") {
-                db.ref('videos').push({ url: res.info.secure_url, sender: UID, likes: 0, created_at: Date.now() });
-                updateXP(100);
+                db.ref('videos').push({ url: res.info.secure_url, sender: UID, created_at: Date.now() });
             }
         });
 
@@ -159,15 +144,11 @@
                     const vid = e.target.querySelector('video');
                     if(e.isIntersecting) {
                         vid.play().catch(()=>{});
-                        const colors = ['#00f3ff', '#ff0055', '#00ff88', '#bc00ff'];
-                        document.documentElement.style.setProperty('--glow', colors[Math.floor(Math.random()*colors.length)]);
                     } else { vid.pause(); }
                 });
             }, { threshold: 0.8 });
             document.querySelectorAll('.v-segment').forEach(s => observer.observe(s));
         }
-
-        document.addEventListener('touchstart', () => { document.querySelectorAll('video').forEach(v => v.muted = false); }, { once: true });
     </script>
 </body>
 </html>
