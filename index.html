@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>SHΔDØW GENESIS | VIOLET ELITE</title>
+    <title>SHΔDØW | VIOLET PUBLIC</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://upload-widget.cloudinary.com/global/all.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -11,106 +11,76 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Cairo:wght@300;600;900&display=swap');
-        
         :root { --glow: #bf00ff; --bg-purple: #0a0118; }
         body { margin: 0; background: var(--bg-purple); color: #fff; overflow: hidden; font-family: 'Cairo', sans-serif; height: 100vh; }
-        
-        /* تأثير الخلفية البنفسجية المتدرجة */
-        .bg-gradient-radial {
-            background: radial-gradient(circle at center, #1a023d 0%, #0a0118 100%);
-            position: fixed; inset: 0; z-index: -1;
-        }
-
+        .bg-gradient-radial { background: radial-gradient(circle at center, #1a023d 0%, #0a0118 100%); position: fixed; inset: 0; z-index: -1; }
         .premium-scroller { height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; }
         .premium-scroller::-webkit-scrollbar { display: none; }
-        
         .v-segment { height: 100vh; width: 100vw; scroll-snap-align: start; position: relative; background: transparent; overflow: hidden; }
-        video { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.8) contrast(1.1); border-radius: 0; }
-
-        /* تأثير الزجاج العميق المحسن */
-        .ultra-glass { 
-            background: rgba(255, 255, 255, 0.03); 
-            backdrop-filter: blur(30px) saturate(150%); 
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
-        }
-        
+        video { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.8); }
+        .ultra-glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(30px); border: 1px solid rgba(255, 255, 255, 0.1); }
         .xp-display { position: fixed; top: 40px; left: 30px; z-index: 100; padding: 12px; border-left: 3px solid var(--glow); pointer-events: none; }
-        .xp-line { width: 140px; height: 3px; background: rgba(191, 0, 255, 0.1); margin-top: 8px; border-radius: 10px; }
-        #xp-bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--glow), #ff00ea); box-shadow: 0 0 15px var(--glow); transition: 1s cubic-bezier(0.17, 0.67, 0.83, 0.67); }
-
+        .xp-line { width: 140px; height: 3px; background: rgba(191, 0, 255, 0.1); margin-top: 8px; }
+        #xp-bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--glow), #ff00ea); box-shadow: 0 0 15px var(--glow); transition: 1s; }
         .side-actions { position: absolute; right: 20px; bottom: 140px; display: flex; flex-direction: column; gap: 20px; z-index: 50; }
-        .luxury-btn { width: 58px; height: 58px; border-radius: 22px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; }
-        .luxury-btn:active { transform: scale(0.9); }
-
+        .luxury-btn { width: 58px; height: 58px; border-radius: 22px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; }
         .nav-bridge { position: fixed; bottom: 35px; left: 50%; transform: translateX(-50%); width: 88%; max-width: 420px; height: 75px; border-radius: 35px; display: flex; justify-content: space-around; align-items: center; z-index: 100; }
-        
-        .upload-diamond { width: 62px; height: 62px; background: #fff; color: #000; border-radius: 24px; transform: rotate(45deg); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 0 30px rgba(191, 0, 255, 0.4); }
+        .upload-diamond { width: 62px; height: 62px; background: #fff; color: #000; border-radius: 24px; transform: rotate(45deg); display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 0 30px rgba(191, 0, 255, 0.4); }
         .upload-diamond i { transform: rotate(-45deg); font-size: 1.5rem; }
-
         .footer-stamp { position: fixed; bottom: 10px; width: 100%; text-align: center; font-family: 'Syncopate', sans-serif; font-size: 7px; color: rgba(191, 0, 255, 0.3); letter-spacing: 4px; z-index: 10; pointer-events: none; }
-        
-        .v-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(10, 1, 24, 0.8) 0%, transparent 40%, transparent 60%, rgba(10, 1, 24, 0.4) 100%); pointer-events: none; }
+        #comment-sheet { position: fixed; inset: 0; background: rgba(10, 1, 24, 0.95); z-index: 1000; display: none; flex-direction: column; border-top: 1px solid var(--glow); }
     </style>
 </head>
 <body>
-
     <div class="bg-gradient-radial"></div>
-
     <div class="xp-display">
         <div class="text-[9px] font-bold text-white/40 tracking-[5px] font-[Syncopate]">EST. 2026</div>
-        <div id="rank-name" class="text-[12px] font-black text-[var(--glow)] mt-1 tracking-widest">VIOLET_SYNC...</div>
+        <div id="rank-name" class="text-[12px] font-black text-[var(--glow)] mt-1 tracking-widest">VIOLET_CORE</div>
         <div class="xp-line"><div id="xp-bar"></div></div>
     </div>
 
     <main class="premium-scroller" id="video-stream">
-        <div class="h-full flex flex-col items-center justify-center">
-            <div class="w-12 h-12 border-2 border-t-transparent border-[var(--glow)] rounded-full animate-spin"></div>
-        </div>
+        <div class="h-full flex flex-col items-center justify-center"><i class="fas fa-atom fa-spin text-3xl text-[var(--glow)]"></i></div>
     </main>
 
     <div class="side-actions">
-        <div class="luxury-btn ultra-glass" onclick="actionWithAd('like')"><i class="fas fa-heart text-white/80"></i></div>
-        <div class="luxury-btn ultra-glass" onclick="actionWithAd('chat')"><i class="fas fa-comment-dots text-white/80"></i></div>
-        <div class="luxury-btn ultra-glass" onclick="actionWithAd('share')"><i class="fas fa-paper-plane text-white/80"></i></div>
+        <div class="luxury-btn ultra-glass" onclick="actionWithAd('like')"><i class="fas fa-heart"></i></div>
+        <div class="luxury-btn ultra-glass" onclick="openComments()"><i class="fas fa-comment-dots"></i></div>
+        <div class="luxury-btn ultra-glass" onclick="actionWithAd('share')"><i class="fas fa-paper-plane"></i></div>
     </div>
 
     <nav class="nav-bridge ultra-glass">
-        <i class="fas fa-braille text-white/40 hover:text-[var(--glow)] transition-colors" onclick="location.reload()"></i>
+        <i class="fas fa-th-large text-white/40" onclick="location.reload()"></i>
         <div class="upload-diamond" id="trigger-upload"><i class="fas fa-plus"></i></div>
-        <i class="fas fa-fingerprint text-white/40 hover:text-[var(--glow)] transition-colors" onclick="actionWithAd('profile')"></i>
+        <i class="fas fa-user-secret text-white/40" onclick="actionWithAd('profile')"></i>
     </nav>
 
-    <div class="footer-stamp">SHΔDØW GENESIS PROTOCOL // VIOLET EDITION</div>
+    <div id="comment-sheet" class="p-6">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="font-[Syncopate] text-[var(--glow)] text-sm tracking-widest">REALTIME_FEEDBACK</h2>
+            <i class="fas fa-times text-xl" onclick="closeComments()"></i>
+        </div>
+        <div id="comments-list" class="flex-1 overflow-y-auto space-y-4 mb-4 pr-2"></div>
+        <div class="flex gap-2">
+            <input type="text" id="comment-input" class="flex-1 bg-white/5 border border-white/10 rounded-2xl p-4 outline-none focus:border-[var(--glow)] transition-all" placeholder="Write a comment...">
+            <button onclick="postComment()" class="w-14 h-14 ultra-glass rounded-2xl text-[var(--glow)]"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <div class="footer-stamp">ORIGIN: FEBRUARY 2026 | PUBLIC ACCESS GRANTED</div>
 
     <script>
-        const UID = localStorage.getItem('shadow_v2_uid') || 'VX-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+        const UID = localStorage.getItem('shadow_v2_uid') || 'GUEST-' + Math.random().toString(36).substr(2, 5).toUpperCase();
         localStorage.setItem('shadow_v2_uid', UID);
-        let xpScore = parseInt(localStorage.getItem('shadow_v2_xp')) || 0;
+        let currentVideoId = null;
 
         const firebaseConfig = { databaseURL: "https://forg-c693e-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        const AD_LINKS = [
-            "https://www.effectivegatecpm.com/bxwxuk2f39?key=566216691dc8b76a740840e94f68f44c",
-            "https://www.effectivegatecpm.com/k60w64w4gk?key=564f3d8cc4ac85949f218179b742495e"
-        ];
-
-        function actionWithAd(type) {
-            window.open(AD_LINKS[Math.floor(Math.random() * AD_LINKS.length)], '_blank');
-            updateXP(15);
-        }
-
-        function updateXP(v) {
-            xpScore += v;
-            localStorage.setItem('shadow_v2_xp', xpScore);
-            const level = Math.floor(xpScore / 200) + 1;
-            const progress = (xpScore % 200 / 200) * 100;
-            document.getElementById('rank-name').innerText = `VIOLET LVL.${level}`;
-            document.getElementById('xp-bar').style.width = progress + "%";
-        }
-        updateXP(0);
+        const AD_LINKS = ["https://www.effectivegatecpm.com/bxwxuk2f39?key=566216691dc8b76a740840e94f68f44c", "https://www.effectivegatecpm.com/k60w64w4gk?key=564f3d8cc4ac85949f218179b742495e"];
+        
+        function actionWithAd(type) { window.open(AD_LINKS[Math.floor(Math.random() * AD_LINKS.length)], '_blank'); }
 
         db.ref('videos').on('value', snap => {
             const stream = document.getElementById('video-stream');
@@ -118,46 +88,64 @@
             if(!videos) return;
             stream.innerHTML = '';
             Object.keys(videos).reverse().forEach(key => {
-                const data = videos[key];
                 const section = document.createElement('section');
                 section.className = 'v-segment';
-                section.innerHTML = `
-                    <div class="v-overlay"></div>
-                    <video loop playsinline src="${data.url}"></video>
-                `;
+                section.dataset.id = key;
+                section.innerHTML = `<video loop playsinline src="${videos[key].url}"></video>`;
                 stream.appendChild(section);
             });
             initMotion();
         });
 
-        const cloudSettings = { cloudName: "dfscughol", uploadPreset: "update_vk" };
-        const uploader = cloudinary.createUploadWidget({ ...cloudSettings, sources: ['local'] }, (err, res) => {
+        function openComments() {
+            document.getElementById('comment-sheet').style.display = 'flex';
+            loadComments();
+        }
+        function closeComments() { document.getElementById('comment-sheet').style.display = 'none'; }
+
+        function postComment() {
+            const inp = document.getElementById('comment-input');
+            if(inp.value.trim() && currentVideoId) {
+                db.ref(`comments/${currentVideoId}`).push({ user: UID, text: inp.value, time: Date.now() });
+                inp.value = '';
+            }
+        }
+
+        function loadComments() {
+            if(!currentVideoId) return;
+            db.ref(`comments/${currentVideoId}`).on('value', s => {
+                const list = document.getElementById('comments-list');
+                list.innerHTML = '';
+                const data = s.val();
+                if(data) Object.values(data).forEach(c => {
+                    const div = document.createElement('div');
+                    div.className = 'p-4 ultra-glass rounded-2xl border-l-2 border-[var(--glow)]';
+                    div.innerHTML = `<span class="text-[9px] text-[var(--glow)] font-bold block mb-1">${c.user}</span><p class="text-sm text-white/80">${c.text}</p>`;
+                    list.appendChild(div);
+                });
+                list.scrollTop = list.scrollHeight;
+            });
+        }
+
+        const uploader = cloudinary.createUploadWidget({ cloudName: "dfscughol", uploadPreset: "update_vk" }, (err, res) => {
             if (res.event === "success") {
                 db.ref('videos').push({ url: res.info.secure_url, sender: UID, created_at: Date.now() });
-                updateXP(50);
             }
         });
-
         document.getElementById("trigger-upload").onclick = () => uploader.open();
 
         function initMotion() {
-            const observer = new IntersectionObserver(entries => {
+            const obs = new IntersectionObserver(entries => {
                 entries.forEach(e => {
-                    const vid = e.target.querySelector('video');
                     if(e.isIntersecting) {
-                        vid.play().catch(()=>{});
-                        // تغيير توهج النيون بناءً على الفيديو
-                        const palette = ['#bf00ff', '#ff00ea', '#7000ff', '#4d00ff'];
-                        document.documentElement.style.setProperty('--glow', palette[Math.floor(Math.random()*palette.length)]);
-                    } else { vid.pause(); vid.currentTime = 0; }
+                        e.target.querySelector('video').play().catch(()=>{});
+                        currentVideoId = e.target.dataset.id;
+                    } else { e.target.querySelector('video').pause(); }
                 });
-            }, { threshold: 0.6 });
-            document.querySelectorAll('.v-segment').forEach(s => observer.observe(s));
+            }, { threshold: 0.7 });
+            document.querySelectorAll('.v-segment').forEach(s => obs.observe(s));
         }
-
-        document.addEventListener('touchstart', () => { 
-            document.querySelectorAll('video').forEach(v => v.muted = false); 
-        }, { once: true });
+        document.addEventListener('touchstart', () => { document.querySelectorAll('video').forEach(v => v.muted = false); }, { once: true });
     </script>
 </body>
 </html>
