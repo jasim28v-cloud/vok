@@ -3,86 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>SHΔDØW | VIOLET PUBLIC</title>
+    <title>VORTEX | NEURAL LINK 2099</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://upload-widget.cloudinary.com/global/all.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Cairo:wght@300;600;900&display=swap');
-        :root { --glow: #bf00ff; --bg-purple: #0a0118; }
-        body { margin: 0; background: var(--bg-purple); color: #fff; overflow: hidden; font-family: 'Cairo', sans-serif; height: 100vh; }
-        .bg-gradient-radial { background: radial-gradient(circle at center, #1a023d 0%, #0a0118 100%); position: fixed; inset: 0; z-index: -1; }
-        .premium-scroller { height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; }
-        .premium-scroller::-webkit-scrollbar { display: none; }
-        .v-segment { height: 100vh; width: 100vw; scroll-snap-align: start; position: relative; background: transparent; overflow: hidden; }
-        video { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.8); }
-        .ultra-glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(30px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .xp-display { position: fixed; top: 40px; left: 30px; z-index: 100; padding: 12px; border-left: 3px solid var(--glow); pointer-events: none; }
-        .xp-line { width: 140px; height: 3px; background: rgba(191, 0, 255, 0.1); margin-top: 8px; }
-        #xp-bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--glow), #ff00ea); box-shadow: 0 0 15px var(--glow); transition: 1s; }
-        .side-actions { position: absolute; right: 20px; bottom: 140px; display: flex; flex-direction: column; gap: 20px; z-index: 50; }
-        .luxury-btn { width: 58px; height: 58px; border-radius: 22px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; }
-        .nav-bridge { position: fixed; bottom: 35px; left: 50%; transform: translateX(-50%); width: 88%; max-width: 420px; height: 75px; border-radius: 35px; display: flex; justify-content: space-around; align-items: center; z-index: 100; }
-        .upload-diamond { width: 62px; height: 62px; background: #fff; color: #000; border-radius: 24px; transform: rotate(45deg); display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 0 30px rgba(191, 0, 255, 0.4); }
-        .upload-diamond i { transform: rotate(-45deg); font-size: 1.5rem; }
-        .footer-stamp { position: fixed; bottom: 10px; width: 100%; text-align: center; font-family: 'Syncopate', sans-serif; font-size: 7px; color: rgba(191, 0, 255, 0.3); letter-spacing: 4px; z-index: 10; pointer-events: none; }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Cairo:wght@200;700&display=swap');
         
-        #comment-sheet { 
-            position: fixed; 
-            inset: 0; 
-            background: rgba(26, 2, 61, 0.85); 
-            backdrop-filter: blur(25px);
-            z-index: 1000; 
-            display: none; 
-            flex-direction: column; 
-            border-top: 1px solid rgba(191, 0, 255, 0.3);
+        :root { --neon: #bc00ff; --cyan: #00f3ff; --bg: #05000a; }
+        
+        body { margin: 0; background: var(--bg); color: #fff; overflow: hidden; font-family: 'Cairo', sans-serif; height: 100vh; }
+
+        /* خلفية الجزيئات المستقبلية */
+        #canvas-nebula { position: fixed; inset: 0; z-index: -1; opacity: 0.6; }
+
+        .vortex-container { height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; perspective: 1000px; }
+        .vortex-container::-webkit-scrollbar { display: none; }
+        
+        .v-frame { height: 100vh; width: 100vw; scroll-snap-align: start; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        
+        /* تأثير زجاجي مع انحناء مستقبلي */
+        video { 
+            width: 92%; height: 85%; object-fit: cover; 
+            border-radius: 40px; border: 1px solid rgba(188, 0, 255, 0.3);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
+            transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
+        .v-frame.active video { transform: scale(1.05) rotateX(0deg); }
+
+        .hud-display { position: fixed; top: 40px; right: 30px; z-index: 100; text-align: right; pointer-events: none; }
+        .glitch-text { font-family: 'Orbitron', sans-serif; font-weight: 900; color: var(--cyan); text-shadow: 2px 0 var(--neon); animation: glitch 3s infinite; }
+
+        @keyframes glitch {
+            0% { clip-path: inset(10% 0 30% 0); transform: skew(5deg); }
+            5% { clip-path: inset(80% 0 1% 0); transform: skew(-5deg); }
+            10% { clip-path: inset(10% 0 30% 0); transform: skew(0); }
+        }
+
+        .side-orb { position: absolute; left: 25px; bottom: 150px; display: flex; flex-direction: column; gap: 30px; z-index: 50; }
+        .cyber-btn { 
+            width: 60px; height: 60px; border-radius: 50%; 
+            background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            display: flex; items-center justify-content: center;
+            box-shadow: inset 0 0 15px rgba(0, 243, 255, 0.1);
+            transition: 0.5s; cursor: pointer;
+        }
+        .cyber-btn:hover { border-color: var(--cyan); box-shadow: 0 0 20px var(--cyan); transform: rotate(15deg) scale(1.1); }
+
+        .nav-core { 
+            position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); 
+            width: 90%; max-width: 450px; height: 80px; 
+            background: rgba(10, 0, 20, 0.7); backdrop-filter: blur(40px);
+            border-radius: 100px; border: 1px solid rgba(188, 0, 255, 0.2);
+            display: flex; justify-content: space-around; align-items: center; z-index: 100;
+        }
+
+        .upload-portal { 
+            width: 70px; height: 70px; background: linear-gradient(135deg, var(--cyan), var(--neon));
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            margin-top: -50px; border: 5px solid var(--bg); box-shadow: 0 10px 30px rgba(188, 0, 255, 0.5);
+            transition: 0.5s; cursor: pointer;
+        }
+        .upload-portal:hover { transform: scale(1.2) rotate(180deg); }
+
+        #comment-vortex { 
+            position: fixed; inset: 0; background: rgba(5, 0, 10, 0.98); 
+            z-index: 2000; display: none; padding: 40px; clip-path: circle(0% at 50% 90%);
+            transition: 0.8s cubic-bezier(0.8, 0, 0.2, 1);
+        }
+        #comment-vortex.open { clip-path: circle(150% at 50% 90%); display: flex; flex-direction: column; }
+
+        .footer-line { position: fixed; bottom: 10px; width: 100%; text-align: center; font-family: 'Orbitron'; font-size: 8px; opacity: 0.3; letter-spacing: 5px; }
     </style>
 </head>
 <body>
-    <div class="bg-gradient-radial"></div>
-    <div class="xp-display">
-        <div class="text-[9px] font-bold text-white/40 tracking-[5px] font-[Syncopate]">EST. 2026</div>
-        <div id="rank-name" class="text-[12px] font-black text-[var(--glow)] mt-1 tracking-widest">VIOLET_CORE</div>
-        <div class="xp-line"><div id="xp-bar"></div></div>
+
+    <canvas id="canvas-nebula"></canvas>
+
+    <div class="hud-display">
+        <div class="glitch-text text-xl">SHΔDØW_OS_v9.0</div>
+        <div class="text-[9px] tracking-[4px] opacity-50">SYNC_STATUS: ENCRYPTED</div>
+        <div class="text-[9px] tracking-[4px] text-[var(--cyan)]">EST. 2026 // NODE_ACTIVE</div>
     </div>
 
-    <main class="premium-scroller" id="video-stream">
-        <div class="h-full flex flex-col items-center justify-center"><i class="fas fa-atom fa-spin text-3xl text-[var(--glow)]"></i></div>
-    </main>
+    <main class="vortex-container" id="video-grid"></main>
 
-    <div class="side-actions">
-        <div class="luxury-btn ultra-glass" onclick="triggerAdAction('like')"><i class="fas fa-heart"></i></div>
-        <div class="luxury-btn ultra-glass" onclick="triggerAdAction('comment')"><i class="fas fa-comment-dots"></i></div>
-        <div class="luxury-btn ultra-glass" onclick="triggerAdAction('share')"><i class="fas fa-paper-plane"></i></div>
+    <div class="side-orb">
+        <div class="cyber-btn" onclick="cyberAction('like')"><i class="fas fa-heart-pulse text-[var(--neon)]"></i></div>
+        <div class="cyber-btn" onclick="cyberAction('comment')"><i class="fas fa-satellite-dish text-[var(--cyan)]"></i></div>
+        <div class="cyber-btn" onclick="cyberAction('share')"><i class="fas fa-biohazard"></i></div>
     </div>
 
-    <nav class="nav-bridge ultra-glass">
-        <i class="fas fa-th-large text-white/40" onclick="location.reload()"></i>
-        <div class="upload-diamond" id="trigger-upload"><i class="fas fa-plus"></i></div>
-        <i class="fas fa-user-secret text-white/40" onclick="triggerAdAction('profile')"></i>
+    <nav class="nav-core">
+        <i class="fas fa-terminal opacity-30" onclick="location.reload()"></i>
+        <div class="upload-portal" id="btn-upload"><i class="fas fa-atom text-2xl animate-spin-slow"></i></div>
+        <i class="fas fa-user-astronaut opacity-30" onclick="cyberAction('profile')"></i>
     </nav>
 
-    <div id="comment-sheet" class="p-6">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="font-[Syncopate] text-[var(--glow)] text-sm tracking-widest">REALTIME_FEEDBACK</h2>
-            <i class="fas fa-times text-xl cursor-pointer" onclick="closeComments()"></i>
+    <div id="comment-vortex">
+        <div class="flex justify-between items-center mb-10">
+            <h1 class="font-black text-2xl tracking-tighter">NEURAL_FEEDBACK</h1>
+            <i class="fas fa-door-open text-3xl cursor-pointer" onclick="toggleVortex(false)"></i>
         </div>
-        <div id="comments-list" class="flex-1 overflow-y-auto space-y-4 mb-4 pr-2"></div>
-        <div class="flex gap-2">
-            <input type="text" id="comment-input" class="flex-1 bg-white/5 border border-white/10 rounded-2xl p-4 outline-none focus:border-[var(--glow)] transition-all" placeholder="Write a comment...">
-            <button onclick="postComment()" class="w-14 h-14 ultra-glass rounded-2xl text-[var(--glow)]"><i class="fas fa-paper-plane"></i></button>
+        <div id="comm-stream" class="flex-1 overflow-y-auto space-y-6 mb-6"></div>
+        <div class="flex gap-4">
+            <input type="text" id="comm-input" class="flex-1 bg-white/5 border-b-2 border-[var(--cyan)] p-5 outline-none font-bold" placeholder="ENCODE MESSAGE...">
+            <button onclick="sendSignal()" class="px-8 bg-[var(--cyan)] text-black font-black rounded-full">SEND</button>
         </div>
     </div>
 
-    <div class="footer-stamp">ORIGIN: FEBRUARY 2026 | PUBLIC ACCESS GRANTED</div>
+    <div class="footer-line">ORIGIN_POINT: 01.03.2026 | SYSTEM_TIME: REALTIME</div>
 
     <script>
-        const UID = localStorage.getItem('shadow_v2_uid') || 'GUEST-' + Math.random().toString(36).substr(2, 5).toUpperCase();
-        localStorage.setItem('shadow_v2_uid', UID);
-        let currentVideoId = null;
+        const UID = localStorage.getItem('vortex_uid') || 'PHANTOM-' + Math.random().toString(36).substr(2, 4).toUpperCase();
+        localStorage.setItem('vortex_uid', UID);
+        let activeVideo = null;
 
         const firebaseConfig = { databaseURL: "https://forg-c693e-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
@@ -93,79 +131,104 @@
             "https://www.effectivegatecpm.com/k60w64w4gk?key=564f3d8cc4ac85949f218179b742495e",
             "https://www.effectivegatecpm.com/kuki6rvqm?key=a04d97f6be8bda0dd0a291285eb401bf"
         ];
-        
-        function triggerAdAction(type) {
-            window.open(AD_LINKS[Math.floor(Math.random() * AD_LINKS.length)], '_blank');
-            if(type === 'comment') openComments();
-            if(type === 'share' && navigator.share) {
-                navigator.share({title: 'Shadow Genesis', url: window.location.href});
-            }
+
+        function cyberAction(type) {
+            window.open(AD_LINKS[Math.floor(Math.random()*AD_LINKS.length)], '_blank');
+            if(type === 'comment') toggleVortex(true);
         }
 
-        db.ref('videos').on('value', snap => {
-            const stream = document.getElementById('video-stream');
-            const videos = snap.val();
-            if(!videos) return;
-            stream.innerHTML = '';
-            Object.keys(videos).reverse().forEach(key => {
-                const section = document.createElement('section');
-                section.className = 'v-segment';
-                section.dataset.id = key;
-                section.innerHTML = `<video loop playsinline src="${videos[key].url}"></video>`;
-                stream.appendChild(section);
+        function toggleVortex(show) {
+            const v = document.getElementById('comment-vortex');
+            if(show) { v.style.display = 'flex'; setTimeout(() => v.classList.add('open'), 10); loadSignals(); }
+            else { v.classList.remove('open'); setTimeout(() => v.style.display = 'none', 800); }
+        }
+
+        db.ref('videos').on('value', s => {
+            const grid = document.getElementById('video-grid');
+            const data = s.val();
+            if(!data) return;
+            grid.innerHTML = '';
+            Object.keys(data).reverse().forEach(id => {
+                const div = document.createElement('section');
+                div.className = 'v-frame';
+                div.dataset.id = id;
+                div.innerHTML = `<video loop playsinline src="${data[id].url}"></video>`;
+                grid.appendChild(div);
             });
-            initMotion();
+            initObserver();
         });
 
-        function openComments() {
-            document.getElementById('comment-sheet').style.display = 'flex';
-            loadComments();
-        }
-        function closeComments() { document.getElementById('comment-sheet').style.display = 'none'; }
-
-        function postComment() {
-            const inp = document.getElementById('comment-input');
-            if(inp.value.trim() && currentVideoId) {
-                db.ref(`comments/${currentVideoId}`).push({ user: UID, text: inp.value, time: Date.now() });
+        function sendSignal() {
+            const inp = document.getElementById('comm-input');
+            if(inp.value.trim() && activeVideo) {
+                db.ref(`comments/${activeVideo}`).push({ user: UID, msg: inp.value });
                 inp.value = '';
             }
         }
 
-        function loadComments() {
-            if(!currentVideoId) return;
-            db.ref(`comments/${currentVideoId}`).on('value', s => {
-                const list = document.getElementById('comments-list');
-                list.innerHTML = '';
-                const data = s.val();
-                if(data) Object.values(data).forEach(c => {
-                    const div = document.createElement('div');
-                    div.className = 'p-4 ultra-glass rounded-2xl border-l-2 border-[var(--glow)]';
-                    div.innerHTML = `<span class="text-[9px] text-[var(--glow)] font-bold block mb-1">${c.user}</span><p class="text-sm text-white/80">${c.text}</p>`;
-                    list.appendChild(div);
+        function loadSignals() {
+            db.ref(`comments/${activeVideo}`).on('value', s => {
+                const box = document.getElementById('comm-stream');
+                box.innerHTML = '';
+                const d = s.val();
+                if(d) Object.values(d).forEach(m => {
+                    const msg = document.createElement('div');
+                    msg.className = 'p-5 bg-white/5 border-r-4 border-[var(--neon)] rounded-xl';
+                    msg.innerHTML = `<span class="text-[10px] text-[var(--cyan)] font-black uppercase">${m.user}</span><p class="mt-2 text-lg">${m.msg}</p>`;
+                    box.appendChild(msg);
                 });
-                list.scrollTop = list.scrollHeight;
+                box.scrollTop = box.scrollHeight;
             });
         }
 
         const uploader = cloudinary.createUploadWidget({ cloudName: "dfscughol", uploadPreset: "update_vk" }, (err, res) => {
-            if (res.event === "success") {
-                db.ref('videos').push({ url: res.info.secure_url, sender: UID, created_at: Date.now() });
-            }
+            if (res.event === "success") db.ref('videos').push({ url: res.info.secure_url, sender: UID });
         });
-        document.getElementById("trigger-upload").onclick = () => uploader.open();
+        document.getElementById('btn-upload').onclick = () => uploader.open();
 
-        function initMotion() {
+        function initObserver() {
             const obs = new IntersectionObserver(entries => {
                 entries.forEach(e => {
+                    const vid = e.target.querySelector('video');
                     if(e.isIntersecting) {
-                        e.target.querySelector('video').play().catch(()=>{});
-                        currentVideoId = e.target.dataset.id;
-                    } else { e.target.querySelector('video').pause(); }
+                        e.target.classList.add('active');
+                        vid.play();
+                        activeVideo = e.target.dataset.id;
+                    } else {
+                        e.target.classList.remove('active');
+                        vid.pause();
+                    }
                 });
             }, { threshold: 0.7 });
-            document.querySelectorAll('.v-segment').forEach(s => obs.observe(s));
+            document.querySelectorAll('.v-frame').forEach(f => obs.observe(f));
         }
-        document.addEventListener('touchstart', () => { document.querySelectorAll('video').forEach(v => v.muted = false); }, { once: true });
+
+        // تحريك خلفية الجزيئات (Canvas Nebula)
+        const canvas = document.getElementById('canvas-nebula');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        let particles = Array.from({length: 80}, () => ({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            s: Math.random() * 2,
+            v: Math.random() * 0.5
+        }));
+        function draw() {
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            particles.forEach(p => {
+                ctx.fillStyle = '#bc00ff';
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.s, 0, Math.PI*2);
+                ctx.fill();
+                p.y -= p.v;
+                if(p.y < 0) p.y = canvas.height;
+            });
+            requestAnimationFrame(draw);
+        }
+        draw();
+
+        document.addEventListener('click', () => { document.querySelectorAll('video').forEach(v => v.muted = false); }, {once:true});
     </script>
 </body>
 </html>
