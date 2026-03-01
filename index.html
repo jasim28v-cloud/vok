@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>VORTEX | VIOLET GENESIS 2099</title>
+    <title>VORTEX | VIOLET STREAM</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://upload-widget.cloudinary.com/global/all.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -16,7 +16,7 @@
         
         body { margin: 0; background: var(--deep-purple); color: #fff; overflow: hidden; font-family: 'Cairo', sans-serif; height: 100vh; }
 
-        /* سديم بنفسجي متحرك يتنفس خلف الموقع */
+        /* خلفية سديمية نابضة */
         .nebula-bg {
             position: fixed; inset: 0; z-index: -2;
             background: radial-gradient(circle at 50% 50%, #2e026d 0%, #120129 100%);
@@ -27,24 +27,51 @@
             100% { transform: scale(1.2); opacity: 1; }
         }
 
-        .vortex-scroller { height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; perspective: 1500px; }
+        /* حاوية التمرير العمودي (مثل تيك توك) */
+        .vortex-scroller { height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; }
         .vortex-scroller::-webkit-scrollbar { display: none; }
         
+        /* قسم كل فيديو */
         .v-frame { height: 100vh; width: 100vw; scroll-snap-align: start; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         
-        /* شاشة الفيديو المستقبلية */
-        video { 
-            width: 88%; height: 80%; object-fit: cover; 
-            border-radius: 60px; border: 2px solid rgba(191, 0, 255, 0.3);
-            box-shadow: 0 0 80px rgba(191, 0, 255, 0.2);
-            transition: 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
-            transform: scale(0.8) rotateX(10deg);
-            filter: brightness(0.6) blur(2px);
+        /* حاوية الفيديو مع الإطار الملون */
+        .video-wrapper {
+            position: relative;
+            width: 90%; /* عرض الفيديو */
+            height: 85%; /* ارتفاع الفيديو */
+            border-radius: 40px;
+            overflow: hidden;
+            transition: transform 0.6s ease-out;
+            transform: scale(0.9); /* تأثير تصغير بسيط للفيديوهات غير النشطة */
         }
-        .v-frame.active video { transform: scale(1) rotateX(0deg); filter: brightness(1) blur(0); border-color: var(--cyan); box-shadow: 0 0 100px rgba(0, 243, 255, 0.15); }
+        .v-frame.active .video-wrapper { transform: scale(1); /* تكبير الفيديو النشط */ }
+
+        /* الفيديو نفسه */
+        video { width: 100%; height: 100%; object-fit: cover; border-radius: 40px; }
+
+        /* الإطار المضيء الدوار بألوان زاهية */
+        .video-wrapper::before {
+            content: '';
+            position: absolute;
+            inset: -15px; /* تمديد الإطار للخارج */
+            background: conic-gradient(from 0deg, #ff0055, #00f3ff, #ff00e1, #ffcc00, #ff0055);
+            animation: rotateFrame 4s linear infinite;
+            z-index: -1;
+            filter: blur(10px); /* تأثير توهج */
+            opacity: 0; /* مخفي افتراضياً */
+            transition: opacity 0.5s ease;
+        }
+        
+        /* إظهار الإطار فقط للفيديو النشط */
+        .v-frame.active .video-wrapper::before { opacity: 1; }
+
+        @keyframes rotateFrame {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
 
         /* واجهة الـ HUD العلوية */
-        .hud-interface { position: fixed; top: 40px; right: 40px; z-index: 100; text-align: right; }
+        .hud-interface { position: fixed; top: 40px; right: 40px; z-index: 100; text-align: right; pointer-events: none; }
         .system-id { font-family: 'Orbitron'; font-weight: 900; color: var(--cyan); text-shadow: 0 0 15px var(--cyan); letter-spacing: 3px; }
 
         /* الأزرار الجانبية الزجاجية */
@@ -54,9 +81,9 @@
             background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px);
             border: 1px solid rgba(191, 0, 255, 0.2);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer;
+            transition: 0.4s ease; cursor: pointer;
         }
-        .glass-orb:hover { transform: scale(1.1) rotate(-5deg); border-color: var(--cyan); background: rgba(0, 243, 255, 0.05); }
+        .glass-orb:hover { transform: scale(1.1); border-color: var(--cyan); background: rgba(0, 243, 255, 0.05); }
 
         /* شريط التحكم الرئيسي السفلي */
         .nav-nebula { 
@@ -73,15 +100,14 @@
             margin-top: -65px; border: 8px solid var(--deep-purple); box-shadow: 0 20px 40px rgba(191, 0, 255, 0.5);
             cursor: pointer; transition: 0.6s;
         }
-        .core-upload:hover { transform: scale(1.2) rotate(180deg); filter: hue-rotate(90deg); }
+        .core-upload:hover { transform: scale(1.2) rotate(180deg); }
 
-        /* واجهة التعليقات الفائقة */
+        /* واجهة التعليقات */
         #comment-vortex { 
             position: fixed; inset: 0; background: rgba(18, 1, 41, 0.97); 
             z-index: 2000; display: none; padding: 40px; overflow: hidden;
         }
         .signal-card { background: rgba(191, 0, 255, 0.05); border: 1px solid rgba(191, 0, 255, 0.1); border-radius: 25px; padding: 20px; transition: 0.3s; }
-        .signal-card:hover { border-color: var(--cyan); background: rgba(0, 243, 255, 0.03); }
 
         .footer-stamp { position: fixed; bottom: 12px; width: 100%; text-align: center; font-family: 'Orbitron'; font-size: 9px; color: var(--neon); opacity: 0.5; letter-spacing: 5px; pointer-events: none; }
     </style>
@@ -91,8 +117,8 @@
     <div class="nebula-bg"></div>
 
     <div class="hud-interface">
-        <div class="system-id text-2xl">VORTEX_CORE_01</div>
-        <div class="text-[10px] font-bold text-white/40 tracking-[5px] mt-1 font-[Syncopate]">VIOLET_EST_2026</div>
+        <div class="system-id text-2xl">VORTEX_STREAM_02</div>
+        <div class="text-[10px] font-bold text-white/40 tracking-[5px] mt-1 font-[Syncopate]">EST. 2026 // PUBLIC</div>
     </div>
 
     <main class="vortex-scroller" id="v-stream-grid"></main>
@@ -124,14 +150,17 @@
     <div class="footer-stamp">ORIGIN_SYSTEM: FEB.2026 | ACCESS_LEVEL: PUBLIC</div>
 
     <script>
-        const NODE_ID = localStorage.getItem('vortex_2099_v2') || 'PHANTOM-' + Math.random().toString(36).substr(2, 4).toUpperCase();
-        localStorage.setItem('vortex_2099_v2', NODE_ID);
+        // تعريف المستخدم
+        const NODE_ID = localStorage.getItem('vortex_stream_uid') || 'GUEST-' + Math.random().toString(36).substr(2, 5).toUpperCase();
+        localStorage.setItem('vortex_stream_uid', NODE_ID);
         let activeID = null;
 
+        // إعداد Firebase
         const firebaseConfig = { databaseURL: "https://forg-c693e-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
+        // روابط الإعلانات
         const GATEWAYS = [
             "https://www.effectivegatecpm.com/bxwxuk2f39?key=566216691dc8b76a740840e94f68f44c",
             "https://www.effectivegatecpm.com/k60w64w4gk?key=564f3d8cc4ac85949f218179b742495e",
@@ -148,21 +177,28 @@
             if(show) fetchSignals();
         }
 
+        // جلب الفيديوهات من Firebase
         db.ref('videos').on('value', s => {
             const grid = document.getElementById('v-stream-grid');
             const data = s.val();
             if(!data) return;
             grid.innerHTML = '';
+            // ترتيب الفيديوهات من الأحدث للأقدم
             Object.keys(data).reverse().forEach(id => {
                 const section = document.createElement('section');
                 section.className = 'v-frame';
                 section.dataset.id = id;
-                section.innerHTML = `<video loop playsinline src="${data[id].url}"></video>`;
+                section.innerHTML = `
+                    <div class="video-wrapper">
+                        <video loop playsinline src="${data[id].url}"></video>
+                    </div>
+                `;
                 grid.appendChild(section);
             });
-            initObserver();
+            initObserver(); // تفعيل نظام مراقبة الفيديوهات النشطة
         });
 
+        // إرسال تعليق
         function sendSignal() {
             const inp = document.getElementById('signal-input');
             if(inp.value.trim() && activeID) {
@@ -171,6 +207,7 @@
             }
         }
 
+        // جلب التعليقات
         function fetchSignals() {
             db.ref(`comments/${activeID}`).on('value', s => {
                 const box = document.getElementById('signal-list');
@@ -186,28 +223,31 @@
             });
         }
 
+        // إعداد Cloudinary لرفع الفيديوهات
         const uploader = cloudinary.createUploadWidget({ cloudName: "dfscughol", uploadPreset: "update_vk" }, (err, res) => {
             if (res.event === "success") db.ref('videos').push({ url: res.info.secure_url, sender: NODE_ID, time: Date.now() });
         });
         document.getElementById('upload-portal').onclick = () => uploader.open();
 
+        // نظام مراقبة الفيديوهات النشطة (لتشغيل الفيديو الذي يراه المستخدم وإظهار إطاره)
         function initObserver() {
             const obs = new IntersectionObserver(entries => {
                 entries.forEach(e => {
                     const vid = e.target.querySelector('video');
                     if(e.isIntersecting) {
-                        e.target.classList.add('active');
-                        vid.play().catch(()=>{});
+                        e.target.classList.add('active'); // إضافة كلاس الفيديو النشط لإظهار الإطار الملون
+                        vid.play().catch(()=>{}); // تشغيل الفيديو تلقائياً
                         activeID = e.target.dataset.id;
                     } else {
-                        e.target.classList.remove('active');
-                        vid.pause();
+                        e.target.classList.remove('active'); // إخفاء الإطار
+                        vid.pause(); // إيقاف الفيديو
                     }
                 });
-            }, { threshold: 0.7 });
+            }, { threshold: 0.7 }); // تشغيل الفيديو عندما يظهر 70% منه على الشاشة
             document.querySelectorAll('.v-frame').forEach(f => obs.observe(f));
         }
 
+        // تفعيل الصوت بعد أول تفاعل من المستخدم
         document.addEventListener('touchstart', () => { 
             document.querySelectorAll('video').forEach(v => v.muted = false); 
         }, {once:true});
