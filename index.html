@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>VΞLΘX | DIGITAL NEBULA</title>
+    <title>VΞLΘX | NEON STREAM</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://upload-widget.cloudinary.com/global/all.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -11,97 +11,104 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Cairo:wght@200;700&display=swap');
-        :root { --neon: #bf00ff; --cyan: #00f3ff; --deep-purple: #0d0121; }
+        :root { --neon: #bf00ff; --cyan: #00f3ff; --deep-purple: #120129; }
         
         body { margin: 0; background: var(--deep-purple); color: #fff; overflow: hidden; font-family: 'Cairo', sans-serif; height: 100vh; }
-        .nebula-bg { position: fixed; inset: 0; z-index: -2; background: radial-gradient(circle at 50% 50%, #25025a 0%, #0d0121 100%); animation: pulse 8s infinite alternate; }
-        @keyframes pulse { 0% { opacity: 0.7; } 100% { opacity: 1; } }
+        .nebula-bg { position: fixed; inset: 0; z-index: -2; background: radial-gradient(circle at 50% 50%, #2e026d 0%, #120129 100%); animation: drift 10s infinite alternate; }
+        @keyframes drift { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(45deg); } }
 
         .v-scroller { height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; }
         .v-scroller::-webkit-scrollbar { display: none; }
         
         .v-frame { height: 100vh; width: 100vw; scroll-snap-align: start; position: relative; display: flex; align-items: center; justify-content: center; }
         
-        .video-container {
-            position: relative; width: 92%; height: 88%; border-radius: 45px; overflow: hidden;
-            transition: 0.7s cubic-bezier(0.2, 0.8, 0.2, 1); transform: scale(0.9);
+        /* الحاوية الخارجية التي تخلق الإطار الملون */
+        .glow-border-wrap {
+            position: relative;
+            width: 88%; height: 82%;
+            padding: 4px; /* سمك الإطار */
+            border-radius: 50px;
+            background: linear-gradient(45deg, #ff0055, #00f3ff, #bf00ff, #ffcc00);
+            background-size: 400% 400%;
+            animation: gradient-flow 5s ease infinite;
+            box-shadow: 0 0 30px rgba(191, 0, 255, 0.4);
+            transition: 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: scale(0.9);
         }
-        .v-frame.active .video-container { transform: scale(1); box-shadow: 0 0 50px rgba(191, 0, 255, 0.3); }
+        .v-frame.active .glow-border-wrap { transform: scale(1); box-shadow: 0 0 60px rgba(0, 243, 255, 0.5); }
 
-        /* الإطار الملون الزاهي */
-        .video-container::after {
-            content: ''; position: absolute; inset: 0; border-radius: 45px;
-            padding: 3px; background: conic-gradient(from 0deg, #ff0055, #00f3ff, #bf00ff, #00f3ff, #ff0055);
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor; mask-composite: exclude;
-            animation: rotate 3s linear infinite; opacity: 0; transition: 0.5s;
+        @keyframes gradient-flow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
-        .v-frame.active .video-container::after { opacity: 1; }
-        @keyframes rotate { 100% { transform: rotate(360deg); } }
 
-        /* العلامة المائية داخل الفيديو */
-        .watermark {
-            position: absolute; top: 20px; left: 20px; z-index: 10;
-            font-family: 'Orbitron'; font-weight: 900; font-size: 14px;
-            color: rgba(255, 255, 255, 0.4); pointer-events: none;
-            display: flex; align-items: center; gap: 8px;
-            text-shadow: 0 0 5px rgba(0,0,0,0.5);
-        }
-        .watermark i { color: var(--cyan); font-size: 10px; }
-
+        .video-box { width: 100%; height: 100%; background: #000; border-radius: 46px; position: relative; overflow: hidden; }
         video { width: 100%; height: 100%; object-fit: cover; }
 
-        /* الهوية العلوية */
-        .brand-hud { position: fixed; top: 40px; right: 40px; z-index: 100; text-align: right; }
-        .brand-name { font-family: 'Orbitron'; font-weight: 900; color: var(--cyan); font-size: 1.8rem; letter-spacing: 5px; }
+        /* العلامة المائية الملونة فوق الفيديو */
+        .color-watermark {
+            position: absolute; top: 25px; left: 25px; z-index: 20;
+            font-family: 'Orbitron'; font-weight: 900; font-size: 16px;
+            background: linear-gradient(90deg, #00f3ff, #bf00ff);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 5px rgba(0, 243, 255, 0.5));
+            pointer-events: none; letter-spacing: 2px;
+        }
 
-        .side-menu { position: absolute; left: 30px; bottom: 150px; display: flex; flex-direction: column; gap: 20px; z-index: 50; }
-        .cyber-button { width: 65px; height: 65px; border-radius: 20px; background: rgba(255,255,255,0.05); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; }
-        .cyber-button:hover { border-color: var(--cyan); transform: translateY(-5px); }
+        /* واجهة الـ HUD */
+        .brand-header { position: fixed; top: 40px; right: 40px; z-index: 100; text-align: right; }
+        .brand-text { font-family: 'Orbitron'; font-weight: 900; color: #fff; font-size: 2rem; letter-spacing: 8px; text-shadow: 0 0 20px var(--neon); }
 
-        .bottom-nav { position: fixed; bottom: 35px; left: 50%; transform: translateX(-50%); width: 85%; max-width: 450px; height: 85px; background: rgba(255,255,255,0.03); backdrop-filter: blur(30px); border-radius: 40px; border: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-around; align-items: center; z-index: 100; }
-        .upload-orb { width: 75px; height: 75px; background: linear-gradient(135deg, var(--neon), var(--cyan)); border-radius: 50%; margin-top: -60px; display: flex; align-items: center; justify-content: center; border: 6px solid var(--deep-purple); cursor: pointer; box-shadow: 0 10px 30px rgba(191,0,255,0.4); }
+        .action-side { position: absolute; left: 30px; bottom: 160px; display: flex; flex-direction: column; gap: 20px; z-index: 50; }
+        .cyber-orb { width: 65px; height: 65px; border-radius: 22px; background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.4s; }
+        .cyber-orb:hover { border-color: var(--cyan); transform: scale(1.1) rotate(5deg); }
 
-        #comment-layer { position: fixed; inset: 0; background: rgba(13,1,33,0.98); z-index: 2000; display: none; padding: 40px; }
+        .nav-glass { position: fixed; bottom: 35px; left: 50%; transform: translateX(-50%); width: 85%; max-width: 450px; height: 85px; background: rgba(46, 2, 109, 0.4); backdrop-filter: blur(40px); border-radius: 40px; border: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-around; align-items: center; z-index: 100; }
+        .upload-portal { width: 75px; height: 75px; background: linear-gradient(135deg, var(--neon), var(--cyan)); border-radius: 50%; margin-top: -65px; display: flex; align-items: center; justify-content: center; border: 6px solid var(--deep-purple); cursor: pointer; box-shadow: 0 15px 30px rgba(191,0,255,0.5); }
+
+        #comment-vortex { position: fixed; inset: 0; background: rgba(18,1,41,0.98); z-index: 2000; display: none; padding: 40px; }
     </style>
 </head>
 <body>
     <div class="nebula-bg"></div>
-    <div class="brand-hud">
-        <div class="brand-name">VΞLΘX</div>
-        <div class="text-[9px] opacity-40 tracking-[6px] font-bold">EST. 2026 // NEURAL_NET</div>
+    <div class="brand-header">
+        <div class="brand-text">VΞLΘX</div>
+        <div class="text-[9px] opacity-40 tracking-[6px] font-bold mt-1 uppercase">Feb.2026 // Public_Access</div>
     </div>
 
-    <main class="v-scroller" id="feed"></main>
+    <main class="v-scroller" id="video-feed"></main>
 
-    <div class="side-menu">
-        <div class="cyber-button" onclick="adAction('like')"><i class="fas fa-heart text-[var(--neon)]"></i></div>
-        <div class="cyber-button" onclick="adAction('comment')"><i class="fas fa-comment-dots"></i></div>
-        <div class="cyber-button" onclick="adAction('share')"><i class="fas fa-share-nodes"></i></div>
+    <div class="action-side">
+        <div class="cyber-orb" onclick="cyberAction('like')"><i class="fas fa-heart text-2xl text-[var(--neon)]"></i></div>
+        <div class="cyber-orb" onclick="cyberAction('comment')"><i class="fas fa-comments text-2xl text-[var(--cyan)]"></i></div>
+        <div class="cyber-orb" onclick="cyberAction('share')"><i class="fas fa-paper-plane text-2xl text-white"></i></div>
     </div>
 
-    <nav class="bottom-nav">
-        <i class="fas fa-ghost opacity-30"></i>
-        <div class="upload-orb" id="upload-btn"><i class="fas fa-plus text-2xl text-black"></i></div>
-        <i class="fas fa-user-shield opacity-30"></i>
+    <nav class="nav-glass">
+        <i class="fas fa-th-large opacity-30 cursor-pointer" onclick="location.reload()"></i>
+        <div class="upload-portal" id="btn-upload"><i class="fas fa-plus text-3xl text-black"></i></div>
+        <i class="fas fa-user-circle opacity-30 cursor-pointer" onclick="cyberAction('profile')"></i>
     </nav>
 
-    <div id="comment-layer" class="flex flex-col">
-        <div class="flex justify-between items-center mb-8"><h2 class="font-black text-2xl font-[Orbitron]">MESSAGES</h2><i class="fas fa-times text-3xl cursor-pointer" onclick="toggleComments(false)"></i></div>
-        <div id="msg-list" class="flex-1 overflow-y-auto space-y-4 mb-6 pr-2"></div>
+    <div id="comment-vortex" class="flex flex-col">
+        <div class="flex justify-between items-center mb-10 border-b border-white/10 pb-6">
+            <h1 class="font-black text-2xl font-[Orbitron] text-[var(--cyan)]">NEURAL_CHAT</h1>
+            <i class="fas fa-times text-4xl cursor-pointer" onclick="toggleVortex(false)"></i>
+        </div>
+        <div id="msg-stream" class="flex-1 overflow-y-auto space-y-6 mb-8 pr-4"></div>
         <div class="flex gap-4 p-4 bg-white/5 rounded-3xl border border-white/10">
-            <input type="text" id="msg-input" class="flex-1 bg-transparent outline-none" placeholder="Enter signal...">
-            <button onclick="postMsg()" class="px-8 py-3 bg-[var(--cyan)] text-black font-bold rounded-2xl">SEND</button>
+            <input type="text" id="msg-input" class="flex-1 bg-transparent outline-none text-white text-lg" placeholder="Write signal...">
+            <button onclick="sendMsg()" class="px-10 py-3 bg-[var(--cyan)] text-black font-black rounded-2xl">SEND</button>
         </div>
     </div>
 
-    <div class="fixed bottom-2 w-full text-center text-[7px] opacity-20 tracking-[10px] pointer-events-none">VΞLΘX PROTOCOL // 2026</div>
+    <div class="fixed bottom-2 w-full text-center text-[8px] color-[var(--neon)] opacity-30 tracking-[10px] pointer-events-none uppercase">VΞLΘX_PROTOCOL_2026</div>
 
     <script>
-        const UID = localStorage.getItem('velox_uid') || 'VX-' + Math.random().toString(36).substr(2, 4).toUpperCase();
-        localStorage.setItem('velox_uid', UID);
-        let activeID = null;
+        const NODE_UID = localStorage.getItem('velox_neon_uid') || 'VX-' + Math.random().toString(36).substr(2, 4).toUpperCase();
+        localStorage.setItem('velox_neon_uid', NODE_UID);
+        let activeVideo = null;
 
         const firebaseConfig = { databaseURL: "https://forg-c693e-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
@@ -113,52 +120,54 @@
             "https://www.effectivegatecpm.com/kuki6rvqm?key=a04d97f6be8bda0dd0a291285eb401bf"
         ];
 
-        function adAction(type) {
+        function cyberAction(type) {
             window.open(ADS[Math.floor(Math.random()*ADS.length)], '_blank');
-            if(type === 'comment') toggleComments(true);
+            if(type === 'comment') toggleVortex(true);
         }
 
-        function toggleComments(s) {
-            document.getElementById('comment-layer').style.display = s ? 'flex' : 'none';
+        function toggleVortex(s) {
+            document.getElementById('comment-vortex').style.display = s ? 'flex' : 'none';
             if(s) loadMsgs();
         }
 
-        db.ref('videos').on('value', s => {
-            const feed = document.getElementById('feed');
-            const data = s.val(); if(!data) return;
+        db.ref('videos').on('value', snap => {
+            const feed = document.getElementById('video-feed');
+            const data = snap.val(); if(!data) return;
             feed.innerHTML = '';
             Object.keys(data).reverse().forEach(id => {
                 const sec = document.createElement('section');
                 sec.className = 'v-frame';
                 sec.dataset.id = id;
                 sec.innerHTML = `
-                    <div class="video-container">
-                        <div class="watermark"><i class="fas fa-circle"></i> VΞLΘX</div>
-                        <video loop playsinline src="${data[id].url}"></video>
+                    <div class="glow-border-wrap">
+                        <div class="video-box">
+                            <div class="color-watermark">VΞLΘX</div>
+                            <video loop playsinline src="${data[id].url}"></video>
+                        </div>
                     </div>
                 `;
                 feed.appendChild(sec);
             });
-            initObserver();
+            startObserver();
         });
 
-        function postMsg() {
+        function sendMsg() {
             const i = document.getElementById('msg-input');
-            if(i.value.trim() && activeID) {
-                db.ref(`comments/${activeID}`).push({ u: UID, m: i.value });
+            if(i.value.trim() && activeVideo) {
+                db.ref(`comments/${activeVideo}`).push({ user: NODE_UID, text: i.value });
                 i.value = '';
             }
         }
 
         function loadMsgs() {
-            db.ref(`comments/${activeID}`).on('value', s => {
-                const box = document.getElementById('msg-list');
+            db.ref(`comments/${activeVideo}`).on('value', s => {
+                const box = document.getElementById('msg-stream');
                 box.innerHTML = '';
                 const d = s.val();
                 if(d) Object.values(d).forEach(x => {
                     const div = document.createElement('div');
-                    div.className = 'p-4 bg-white/5 rounded-2xl border-r-4 border-[var(--cyan)]';
-                    div.innerHTML = `<span class="text-[10px] text-[var(--cyan)] font-bold">${x.u}</span><p class="mt-1">${x.m}</p>`;
+                    div.className = 'p-5 bg-white/5 rounded-2xl border-l-4 border-[var(--cyan)]';
+                    div.innerHTML = `<span class="text-[10px] text-[var(--cyan)] font-bold tracking-widest">${x.user}</span><p class="mt-1 text-white/90">${x.text}</p>`;
                     box.appendChild(div);
                 });
                 box.scrollTop = box.scrollHeight;
@@ -166,21 +175,21 @@
         }
 
         const uploader = cloudinary.createUploadWidget({ cloudName: "dfscughol", uploadPreset: "update_vk" }, (e, r) => {
-            if (r.event === "success") db.ref('videos').push({ url: r.info.secure_url, sender: UID });
+            if (r.event === "success") db.ref('videos').push({ url: r.info.secure_url, sender: NODE_UID });
         });
-        document.getElementById('upload-btn').onclick = () => uploader.open();
+        document.getElementById('btn-upload').onclick = () => uploader.open();
 
-        function initObserver() {
-            const obs = new IntersectionObserver(e => {
-                e.forEach(entry => {
-                    const v = entry.target.querySelector('video');
-                    if(entry.isIntersecting) {
-                        entry.target.classList.add('active');
-                        v.play().catch(()=>{});
-                        activeID = entry.target.dataset.id;
+        function startObserver() {
+            const obs = new IntersectionObserver(entries => {
+                entries.forEach(e => {
+                    const vid = e.target.querySelector('video');
+                    if(e.isIntersecting) {
+                        e.target.classList.add('active');
+                        vid.play().catch(()=>{});
+                        activeVideo = e.target.dataset.id;
                     } else {
-                        entry.target.classList.remove('active');
-                        v.pause();
+                        e.target.classList.remove('active');
+                        vid.pause();
                     }
                 });
             }, { threshold: 0.8 });
